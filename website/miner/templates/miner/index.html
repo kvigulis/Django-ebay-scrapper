@@ -1,0 +1,102 @@
+{% extends 'miner/base_bs3.html' %}
+
+{% block title %}eBay Miner{% endblock %}
+{% block categories_active %}active{% endblock %}
+
+{% block body %}
+	<!-- Filters -->
+    <div class="container">
+        <div class="col-sm-12">
+            <style>
+                #heading_user {
+                    margin-top: 10;
+                }
+            </style>
+            <h3 id="heading_user" >{{ user.username }}'s Filters:</h3>
+        </div>
+    </div>
+
+    {% if filter_list %}
+        {% for filter in filter_list %}
+            <div class="container">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <style>
+                            #filter_title {
+                                margin-top: 0;
+                                margin-bottom: 0;
+                            }
+                        </style>
+                        <h4 class="pull-left" id="filter_title"><a href="{% url 'miner:detail' filter.id%}" data-toggle="tooltip" data-placement="right" title="{{ filter.filter_description }}">{{ filter.filter_title }}</a></h4>
+
+                        <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-trash"></span></button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Delete Filter</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete the <b>{{ filter.filter_title }}</b> filter?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{% url 'miner:filter-delete' filter.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="filter_id" value="{{ filter.id }}" />
+                                            <button type="submit" class="btn btn-danger">
+                                                Delete
+                                            </button>
+                                        </form>&nbsp;
+                                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Back</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .panel-body {
+                            margin-top: 0;
+                            margin-bottom: 0;
+                            background-color: #FBFBFB;
+                        }
+                    </style>
+                    <div class="panel-body">
+                        {% if filter.result_set.all %}
+                            {% for result in filter.result_set.all %}
+                                <a href="{{ result.result_url }}">
+                                    <img class="img-thumbnail" src="{{ result.result_image_url }}" style="width:160px;height:120px;">
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            No Results Found Yet
+                        {% endif %}
+                    </div>
+
+                    <div class="panel-footer">Number of results: {{ filter.result_set.count }}</div>
+                </div>
+            </div>
+
+            {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+        {% endfor %}
+    {% else %}
+        <div class="col-sm-12">
+            <br>
+            <a href="{% url 'miner:filter-add' %}">
+                <button type="button" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Add Filter
+                </button>
+            </a>
+        </div>
+    {% endif %}
+
+
+{% endblock %}
+
+
+

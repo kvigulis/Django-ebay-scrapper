@@ -1,0 +1,32 @@
+{% extends 'miner/base_bs3.html' %}
+
+{%  block title %}eBay Miner - {{filter.filter_title}}{% endblock %}
+{% block add-filter_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+	<div class="row">
+
+		<div class="col-sm-12 col-md-7">
+			<div class="panel panel_default">
+				<div class="panel-body">
+					
+					<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">	
+						{% csrf_token %}
+						{% include 'miner/form_template.html' %}
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10"><br>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-success">Submit</button>						
+							</div>
+						</div>
+					</form>				
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
